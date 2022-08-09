@@ -9,9 +9,13 @@ public class TicTacToe {
     System.out.println("\nLet's play tic tac toe");
 
     // Task 1: Create an array with three rows of '_' characters.
-    char[][] arr = { { '_', '_', '_' }, { '_', '_', '_' }, { '_', '_', '_' } };
+    char[][] board = {
+        { '_', '_', '_' },
+        { '_', '_', '_' },
+        { '_', '_', '_' }
+    };
     // Task 2: Call the function printBoard();
-    printBoard(arr);
+    printBoard(board);
     /*
      * { Task 3: Loop through turns.
      * 
@@ -23,7 +27,9 @@ public class TicTacToe {
      * Task 5: populate the board using askUser's return value. Then, print it.
      * 
      * }
-     * 
+     */
+
+    /*
      * Task 6 - Call the function.
      * if return value == 3 {
      * print: X wins and break the loop
@@ -34,7 +40,34 @@ public class TicTacToe {
      * }
      */
 
+    for (int i = 0; i < 9; i++) {
+
+      if (i % 2 == 0) {
+        System.out.println("Turn: X");
+        int[] spot = askUser(board);
+        board[spot[0]][spot[1]] = 'X';
+        printBoard(board);
+      } else {
+        System.out.println("Turn: O");
+        int[] spot = askUser(board);
+        board[spot[0]][spot[1]] = 'O';
+        printBoard(board);
+      }
+
+      if (checkWin(board) == 3) {
+        System.out.println("X wins!!");
+        break;
+      } else if (checkWin(board) == -3) {
+        System.out.println("O wins!!");
+        break;
+      } else if (i == 8) {
+        System.out.println("It's a tie!");
+      }
+
+    }
+
     scan.close();
+
   }
 
   /**
@@ -51,15 +84,18 @@ public class TicTacToe {
    *              • each character in the grid has one space from the other
    *              character
    */
-  static void printBoard(char[][] arr) {
-    for (int i = 0; i < arr.length; i++) {
-      for (int j = 0; j < arr.length; j++) {
-        System.out.print("\t" + arr[i][j ]);
+  static public void printBoard(char[][] board) {
+    System.out.println();
+    for (int i = 0; i < board.length; i++) {
+      System.out.print("\t");
+      for (int j = 0; j < board.length; j++) {
+        System.out.print(board[i][j] + " ");
       }
-      System.out.println();
+      System.out.print("\n\n");
     }
 
   }
+
   /**
    * Task 4 - Write a function that lets the user choose a spot
    * Function name – askUser
@@ -73,6 +109,22 @@ public class TicTacToe {
    *         3. Return the row and column in an int[] array.
    * 
    */
+  public static int[] askUser(char[][] board) {
+    System.out.print("- pick a row and column number: ");
+
+    int row = scan.nextInt();
+    int column = scan.nextInt();
+
+    while (board[row][column] != ('_')) {
+      System.out.println("Spot take, try again: ");
+      row = scan.nextInt();
+      column = scan.nextInt();
+    }
+
+    int[] spot = { row, column };
+    return spot;
+
+  }
 
   /**
    * Task 6 - Write a function that determines the winner
@@ -88,5 +140,64 @@ public class TicTacToe {
    *         4. Check the left diagonal for a straight X or straight O (Task 9).
    *         5. Check the right diagonal for a straight X or straight O (Task 10).
    */
+  public static int checkWin(char[][] board) {
+    int count = 0;
+
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        if (board[i][j] == 'X') {
+          count++;
+        } else if (board[i][j] == 'O') {
+          count--;
+        }
+      }
+
+      if (count == 3 || count == -3) {
+        return count;
+      } else {
+        count = 0;
+      }
+    }
+
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (board[i][j] == 'X') {
+          count++;
+        } else if (board[i][j] == 'O') {
+          count--;
+        }
+      }
+
+      if (count == 3 || count == -3) {
+        return count;
+      } else {
+        count = 0;
+      }
+    }
+
+    for (int i = 0; i < 3; i++) {
+      if (board[i][i] == 'X') {
+        count++;
+      } else if (board[i][i] == 'O') {
+        count--;
+      }
+    }
+
+    if (count == 3 || count == -3) {
+      return count;
+    } else {
+      count = 0;
+    }
+
+    for (int i = 0; i < 3; i++) {
+      if (board[i][2 - 1] == 'X') {
+        count++;
+      } else if (board[i][2 - i] == 'O') {
+        count--;
+      }
+    }
+
+    return count;
+  }
 
 }
